@@ -16,7 +16,7 @@ class Settings:
         self.bullet_width = 3
         self.bullet_height = 15
         self.bullet_color = (255, 255, 255)
-        self.bullets_allowed = 5
+        self.bullets_allowed = 50
         # Настройки пришельцев
         self.alien_speed = 1.0
         self.fleet_drop_speed = 10
