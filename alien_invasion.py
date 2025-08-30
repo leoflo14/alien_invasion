@@ -21,6 +21,15 @@ class AlienInvasion:
         pygame.display.set_caption("Alien Invasion")
         self.ship = Ship(self)
         self.bullets = pygame.sprite.Group()
+        self.background = pygame.image.load("images/bg_image.jpg").convert()
+        self.background = pygame.transform.scale(
+            self.background, (self.settings.screen_width, self.settings.screen_height)
+        )
+        # начальные координаты двух фонов
+        self.bg_y1 = 0
+        self.bg_y2 = -self.settings.screen_height
+        # скорость прокрутки
+        self.bg_speed = self.settings.bg_speed
 
     def run_game(self):
         """Запуск основного цикла игры."""
@@ -29,8 +38,9 @@ class AlienInvasion:
             self._check_events()
             self.ship.update()
             self._update_bullets()
-            self.screen.fill(self.settings.bg_color)
             self.ship.blitme()
+            # двигаем фон
+            self._update_background()
             # При каждом проходе цикла перерисовывается экран.
             self._update_screen()
 
@@ -86,11 +96,24 @@ class AlienInvasion:
 
     def _update_screen(self):
         """Обновляет изображения на экране и отображает новый экран."""
-        self.screen.fill(self.settings.bg_color)
+        # рисуем два фона
+        self.screen.blit(self.background, (0, self.bg_y1))
+        self.screen.blit(self.background, (0, self.bg_y2))
         self.ship.blitme()
         for bullet in self.bullets.sprites():
             bullet.draw_bullet()
         pygame.display.flip()
+
+    def _update_background(self):
+        """Прокрутка фонового изображения."""
+        self.bg_y1 += self.bg_speed
+        self.bg_y2 += self.bg_speed
+
+        # если фон ушёл за экран — возвращаем наверх
+        if self.bg_y1 >= self.settings.screen_height:
+            self.bg_y1 = -self.settings.screen_height
+        if self.bg_y2 >= self.settings.screen_height:
+            self.bg_y2 = -self.settings.screen_height
 
 
 if __name__ == "__main__":
